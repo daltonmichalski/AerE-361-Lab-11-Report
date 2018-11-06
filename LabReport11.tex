@@ -1,0 +1,66 @@
+\documentclass[11pt]{report}
+\usepackage{outline}
+\usepackage{pmgraph}
+\usepackage[normalem]{ulem}
+\title{\textbf{AerE 361 Lab 11 Report}}
+\author{Dalton Michalski}
+\date{\oldstylenums{11}/\oldstylenums{6}/\oldstylenums{2018}}
+%--------------------Make usable space all of page
+\setlength\parindent{24pt}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0in}
+\setlength{\headsep}{-.25in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+%--------------------Indention
+\setlength{\parindent}{1cm}
+
+\begin{document}
+%--------------------Title Page
+\maketitle
+ 
+%--------------------Begin Outline
+\section{Problem Statement}
+\begin{item}
+\item \textbf{Gauss Jordan Exercise} Create a program to solve a system of equations containing \code{n} equations using the Gauss-Jordan elimination method. Write a report on the time complexity of the resulting code.
+\end{item}
+\begin{item} 
+\item \textbf{ Gauss-Seidel Exercise} Implement a Gauss-Seidel solver by following the algorithm laid out in Professor Xu’s design document. The code should take in either \begin{enumerate}
+    \item A filename in the command line of a CSV file containg an augmented matrix
+    \item Nothing, in which case the program will prompt the user for the number of equations and the respective coefficients.
+\end{enumerate}
+\item If a csv file is specified, the code should output the solution into a new CSV file. If the number of equations and coefficients are manually input, the solution should be printing to the screen. The program should have initialed and reasonable values from the onset for both error and number of iterations, but this should be able to be changed using command line tags. All data types should be double floats.
+\end{item}
+\section{Gauss Jordan Complexity}
+\begin{outline}
+\item Within the "mostly complete" Gauss Jordan code provided in this weeks Github lab repository, the most complex portion of the solution program is referred to as "diagnolizing the matrix". Within this section there is a total of 4 nested loops; 3 \code{for} loops and one \code{if} statement. This means the program has a "big O" time complexity of \begin{equation}
+    O(n^4)
+\end{equation}
+where n is the number of number of components in the entire augmented matrix system of equations provided as an input. I do not feel like there a is a less complex way of solving a system this way due in part to the fact that the code must always be able to iterate through the given system according to AT LEAST 3 indices. And the nested \code{if} statement is a necessary conditional statement to keep the innermost loop running. Even with the time complexity of $O(n^4)$ the program runs almost instantaneously for any system i have provided as an input.
+\end{outline}
+\newpage
+\section{Discussion}
+\begin{outline}
+\item \textbf{Gauss-Jordan}
+\\ The only issues I encountered while finishing the Gauss-Jordan exercise were attributed to dynamic memory allocation. I was continously receiving \code{segmentation fault (core dumped)} while attempting to use \code{malloc} to allocate a block of memory for the input system of equations. The program was able to compile correctly and would read in the number of desired equations, but would fail when trying to store that number. To fix this, i removed the need to use \code{malloc} at all by instead just declaring the augmented matrix after the input number of equations, \code{n}, in the form of \code{double A[n][n+1] ;}. This, along with reindexing all the provided loops to start from 0 instead of 1 allowed my program to opperate perfectly. 
+\item \textbf{Gauss-Seidel}
+\\ I wasn't able to make this program work with reading in and writing out to a csv file. However, my program works perfectly whilst interfacing with the user via the command line. The number of equations able to be solved is also hardcoded in using a \code{#define X 3} where X represents the number of equations and can be easily located and changed on the 3rd line of the entire program. I again ran into issues with \code{segmentation fault (core dumped)} due to trying to dynamically allow memory space for the input matrix. I tried to reuse my csv read and write functions from last weeks lab but was unable to make them function correctly. I was also unable to get the \code{makefile} to produce the target binary. I ran into the issues where \code{main} was inside of both programs and neither had any interdependancy on the other to function correctly. Why these resulting programs would still need to be represented as a binary given their complete independence from each other is confusing to me in its own sense.
+\end{outline}
+\newpage
+\section{References}
+\\ https://reu.dimacs.rutgers.edu/Symbols.pdf
+\\ https://fresh2refresh.com/c-programming/c-function/c-math-h-library-functions/
+\\ https://www.overleaf.com/learn/latex/Cross\_referencing\_sections\_and\_equations/
+\\ https://www.quora.com/What-is-argc-argv-in-C-What-is-its-purpose-Who-introduced-those-functions
+\\ https://www.geeksforgeeks.org/structures-c/
+\\ http://steve.hollasch.net/cgindex/coding/ieeefloat.html
+\\ https://stackoverflow.com/questions/26284110/strdup-confused-about-warnings-implicit-declaration-makes-pointer-with
+\\https://www.w3resource.com/c-programming-exercises/array/c-array-exercise-18.php
+\\https://www.cs.swarthmore.edu/~newhall/unixhelp/C\_arrays.html
+\\https://www3.nd.edu/~zxu2/acms40390F12/Lec-7.3.pdf
+\\http://mathforcollege.com/nm/simulations/nbm/04sle/nbm\_sle\_sim\_naivegauss.pdf
+\end{document}
